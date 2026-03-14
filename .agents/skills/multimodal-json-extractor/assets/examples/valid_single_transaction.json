@@ -1,0 +1,12 @@
+{
+    "transactions": [
+        {
+            "from": "Banco bradesco",
+            "to": "Cabeleireiro",
+            "amount": "50.00",
+            "type": "pagamento",
+            "timestamp": "08-08-2026",
+            "obs": "Cortei o cabelo"
+        }
+    ]
+}

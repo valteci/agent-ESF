@@ -1,0 +1,30 @@
+{
+  "from": {
+    "99pay": "Saldo ou conta vinculada ao 99pay",
+    "carteira": "Dinheiro físico em carteira",
+    "mercado pago": "Saldo ou conta vinculada ao mercado pago",
+    "nubank": "Saldo ou conta vinculada ao nubank",
+    "rico": "Saldo ou conta vinculada à rico",
+    "bradesco": "Saldo ou conta vinculada ao bradesco"
+  },
+  "to": {
+    "comida": "Gastos com alimentação em geral.",
+    "compras": "Gastos com compras de produtos e objetos.",
+    "contas casa": "Despesas da casa.",
+    "transporte": "Locomoção, combustível, app, ônibus etc.",
+    "academia": "Gastos com academia e treino.",
+    "educacao": "Gastos com educacao e ferramentas de estudo.",
+    "dentista": "Gastos com dentista e procedimentos dentários.",
+    "cabelo": "Gastos com corte de cabelo e procedimentos no cabelo.",
+    "plano saude": "Gastos com plano de saúde e coparticipação de planos de saúde.",
+    "viagens": "Gastos com viagens."
+  },
+  "type": {
+    "create batch": "Tudo que engloba ganho de dinheiro, tudo que gera dinheiro",
+    "pay": "Pagamento de despesa, serviços, produtos.",
+    "transfer": "Transferência entre contas/carteiras",
+    "donate": "Doação de dinheiro.",
+    "lend": "Empréstimo concedido.",
+    "return": "Pagamento de empréstimo por parte dos devedores."
+  }
+}
