@@ -1,0 +1,22 @@
+{
+  "from": {
+    "99pay": "Saldo ou conta vinculada ao 99pay.",
+    "mercado pago": "Saldo ou conta vinculada ao mercado pago.",
+    "nubank": "Saldo ou conta vinculada ao nubank.",
+    "rico": "Saldo ou conta vinculada à rico.",
+    "bradesco": "Saldo ou conta vinculada ao bradesco.",
+    "xp": "Saldo ou conta vinculada à xp."
+  },
+  "to": {
+    "99pay": "Saldo ou conta vinculada ao 99pay.",
+    "mercado pago": "Saldo ou conta vinculada ao mercado pago.",
+    "nubank": "Saldo ou conta vinculada ao nubank.",
+    "rico": "Saldo ou conta vinculada à rico.",
+    "bradesco": "Saldo ou conta vinculada ao bradesco.",
+    "xp": "Saldo ou conta vinculada à xp."
+  },
+  "type": {
+    "buy": "Compra do ativo.",
+    "sell": "Venda do ativo."
+  }
+}
