@@ -1,6 +1,6 @@
 ---
 name: investment-json-extractor
-description: Use esta skill quando a tarefa envolver compra ou venda de ativos de investimento, especialmente renda variável, e a saída precisar ser um JSON de transações contábeis no formato ledger.
+description: Use esta skill quando a tarefa envolver compra ou venda de ativos de investimento Brasileiro nas modalidades de ações, ETFs, BDRs, FIIs e outros encontrados na bolsa brasileira, e a saída precisar ser um JSON de transações contábeis no formato ledger.
 ---
 
 # Objetivo
