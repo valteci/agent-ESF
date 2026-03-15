@@ -1,0 +1,52 @@
+{
+  "from": {
+    "99pay": "Saldo ou conta vinculada ao 99pay.",
+    "binance": "Saldo ou conta vinculada a binance.",
+    "bitget": "Saldo ou conta vinculada a bitget.",
+    "bradesco": "Saldo ou conta vinculada ao bradesco.",
+    "bybit": "Saldo ou conta vinculada a bybit.",
+    "coinbase": "Saldo ou conta vinculada a coinbase.",
+    "foxbit": "Saldo ou conta vinculada a foxbit.",
+    "inter": "Saldo ou conta vinculada ao inter.",
+    "itau": "Saldo ou conta vinculada ao itau.",
+    "kraken": "Saldo ou conta vinculada a kraken.",
+    "mercado bitcoin": "Saldo ou conta vinculada ao mercado bitcoin.",
+    "mercado pago": "Saldo ou conta vinculada ao mercado pago.",
+    "nubank": "Saldo ou conta vinculada ao nubank.",
+    "okx": "Saldo ou conta vinculada a okx.",
+    "rico": "Saldo ou conta vinculada a rico.",
+    "xp": "Saldo ou conta vinculada a xp."
+  },
+  "to": {
+    "99pay": "Saldo ou conta vinculada ao 99pay.",
+    "binance": "Saldo ou conta vinculada a binance.",
+    "bitget": "Saldo ou conta vinculada a bitget.",
+    "bradesco": "Saldo ou conta vinculada ao bradesco.",
+    "bybit": "Saldo ou conta vinculada a bybit.",
+    "coinbase": "Saldo ou conta vinculada a coinbase.",
+    "foxbit": "Saldo ou conta vinculada a foxbit.",
+    "inter": "Saldo ou conta vinculada ao inter.",
+    "itau": "Saldo ou conta vinculada ao itau.",
+    "kraken": "Saldo ou conta vinculada a kraken.",
+    "mercado bitcoin": "Saldo ou conta vinculada ao mercado bitcoin.",
+    "mercado pago": "Saldo ou conta vinculada ao mercado pago.",
+    "nubank": "Saldo ou conta vinculada ao nubank.",
+    "okx": "Saldo ou conta vinculada a okx.",
+    "rico": "Saldo ou conta vinculada a rico.",
+    "xp": "Saldo ou conta vinculada a xp."
+  },
+  "type": {
+    "buy": "Compra do criptoativo.",
+    "sell": "Venda do criptoativo."
+  },
+  "asset_rules": {
+    "format": "Use o nome completo do criptoativo em caixa alta.",
+    "quantity_suffix": "Use _QTDE para o lado quantitativo.",
+    "examples": [
+      "BITCOIN",
+      "ETHEREUM",
+      "SOLANA",
+      "USD COIN"
+    ]
+  }
+}

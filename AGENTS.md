@@ -25,4 +25,8 @@ Cada transação deve seguir este modelo conceitual:
 
 - Quando a tarefa envolver movimentações financeiras comuns, como pagamentos, recebimentos, transferências, doações, empréstimos ou gastos gerais extraídos de texto, imagem, PDF ou áudio, usar a skill `multimodal-json-extractor`.
 - Quando a tarefa envolver compra ou venda de ativos de investimento na bolsa brasileira, especialmente a partir de nota de corretagem, imagem, PDF ou texto descrevendo operações de renda variável, usar a skill `investment-json-extractor`.
-
+- Quando a tarefa envolver compra ou venda de criptomoedas ou criptoativos, especialmente a partir de extrato de exchange, trade history, imagem, PDF ou texto descrevendo operações, usar a skill `crypto-investment-json-extractor`.
+- Na skill `crypto-investment-json-extractor`, aplicar a mesma base lógica de `investment-json-extractor` para gerar 2 transações por operação, mas permitir quantidade fracionária com múltiplas casas decimais e tratar taxas conforme o contexto:
+  - se a taxa for monetária, ela afeta a transação financeira como nas operações de bolsa
+  - se a taxa for cobrada no próprio criptoativo negociado, ela afeta a transação de quantidade e não deve ser convertida automaticamente para dinheiro
+  - quando `from` ou `to` representarem o criptoativo, usar sempre o nome completo em caixa alta, por exemplo `BITCOIN` e `ETHEREUM`, nunca `BTC` ou `ETH`
