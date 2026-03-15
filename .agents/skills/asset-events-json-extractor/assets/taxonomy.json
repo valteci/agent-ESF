@@ -1,0 +1,58 @@
+{
+  "from": {
+    "99pay": "Saldo ou conta vinculada ao 99pay.",
+    "binance": "Saldo ou conta vinculada a binance.",
+    "bitget": "Saldo ou conta vinculada a bitget.",
+    "bradesco": "Saldo ou conta vinculada ao bradesco.",
+    "bybit": "Saldo ou conta vinculada a bybit.",
+    "coinbase": "Saldo ou conta vinculada a coinbase.",
+    "foxbit": "Saldo ou conta vinculada a foxbit.",
+    "inter": "Saldo ou conta vinculada ao inter.",
+    "itau": "Saldo ou conta vinculada ao itau.",
+    "kraken": "Saldo ou conta vinculada a kraken.",
+    "mercado bitcoin": "Saldo ou conta vinculada ao mercado bitcoin.",
+    "mercado pago": "Saldo ou conta vinculada ao mercado pago.",
+    "nubank": "Saldo ou conta vinculada ao nubank.",
+    "okx": "Saldo ou conta vinculada a okx.",
+    "rico": "Saldo ou conta vinculada a rico.",
+    "xp": "Saldo ou conta vinculada a xp."
+  },
+  "to": {
+    "99pay": "Saldo ou conta vinculada ao 99pay.",
+    "binance": "Saldo ou conta vinculada a binance.",
+    "bitget": "Saldo ou conta vinculada a bitget.",
+    "bradesco": "Saldo ou conta vinculada ao bradesco.",
+    "bybit": "Saldo ou conta vinculada a bybit.",
+    "coinbase": "Saldo ou conta vinculada a coinbase.",
+    "foxbit": "Saldo ou conta vinculada a foxbit.",
+    "inter": "Saldo ou conta vinculada ao inter.",
+    "itau": "Saldo ou conta vinculada ao itau.",
+    "kraken": "Saldo ou conta vinculada a kraken.",
+    "mercado bitcoin": "Saldo ou conta vinculada ao mercado bitcoin.",
+    "mercado pago": "Saldo ou conta vinculada ao mercado pago.",
+    "nubank": "Saldo ou conta vinculada ao nubank.",
+    "okx": "Saldo ou conta vinculada a okx.",
+    "rico": "Saldo ou conta vinculada a rico.",
+    "xp": "Saldo ou conta vinculada a xp."
+  },
+  "type": {
+    "buy": "Evento que aumenta a quantidade do ativo.",
+    "sell": "Evento que reduz a quantidade do ativo.",
+    "create batch": "Evento que gera ganho em dinheiro real, inclusive provento monetario em reais."
+  },
+  "special_values": {
+    "quantity_bucket": "qtde__bens",
+    "quantity_suffix": "_QTDE",
+    "cash_income_suffix": "_yeld"
+  },
+  "asset_rules": {
+    "listed_asset_format": "Preserve o identificador do ativo como encontrado, por exemplo ITUB4, MXRF11 ou AAPL34.",
+    "crypto_asset_format": "Use o nome completo do criptoativo em caixa alta.",
+    "crypto_examples": [
+      "BITCOIN",
+      "ETHEREUM",
+      "SOLANA",
+      "USD COIN"
+    ]
+  }
+}
