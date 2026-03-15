@@ -14,8 +14,8 @@ Cada transação deve seguir este modelo conceitual:
 # Instruções gerais
 
 - Sempre considerar o contexto textual fornecido pelo usuário junto com os arquivos enviados.
-- O objetivo nesta etapa é somente gerar a saída estruturada em JSON.
-- Nesta etapa, não escrever em planilhas nem persistir dados em banco.
+- Por padrão, o objetivo principal do agente é gerar a saída estruturada em JSON.
+- Persistência em planilha ou banco é uma etapa separada e só deve acontecer quando o usuário pedir explicitamente para registrar ou salvar os dados.
 - A saída final deve seguir exatamente o formato definido pela skill escolhida e por `references/schema.md`.
 - Antes de concluir, validar o JSON gerado com o script `scripts/validate_json.py`, conforme definido na própria skill.
 - Se a validação falhar, tentar regenerar o JSON dentro do limite de tentativas definido na skill.
@@ -35,6 +35,20 @@ Cada transação deve seguir este modelo conceitual:
   - se a fatura for paga com várias garantias, gerar várias transações, uma por garantia
   - se o valor total da fatura for informado, a soma das transações de pagamento deve bater com esse total
 - Quando a tarefa envolver movimentações financeiras comuns, como pagamentos, recebimentos, transferências, doações, empréstimos ou gastos gerais extraídos de texto, imagem, PDF ou áudio, e não se tratar de evento de cartão de crédito, usar a skill `multimodal-json-extractor`.
+- Quando o usuário já tiver um JSON válido e pedir para registrar, salvar ou inserir essas transações na planilha `ESF.ods` da raiz do projeto, usar a skill `esf-ods-ledger-writer`.
+- Na skill `esf-ods-ledger-writer`, cada item do array `transactions` gera exatamente 1 linha nova na aba `F26`, mapeando:
+  - `from` -> coluna A
+  - `to` -> coluna B
+  - `amount` -> coluna C
+  - `type` -> coluna D
+  - `timestamp` -> coluna E
+  - coluna F fica em branco
+  - `obs` -> coluna G
+- Na skill `esf-ods-ledger-writer`, a persistência deve ser tratada como etapa desacoplada da geração do JSON:
+  - primeiro gerar e validar o JSON pela skill de extração apropriada
+  - depois, somente se o usuário pedir, executar o script da skill de persistência
+  - a escrita deve ocorrer somente na aba `F26`
+  - por padrão, usar a planilha `ESF.ods` da raiz do projeto
 - Quando a tarefa envolver compra ou venda de ativos de investimento na bolsa brasileira, especialmente a partir de nota de corretagem, imagem, PDF ou texto descrevendo operações de renda variável, usar a skill `investment-json-extractor`.
 - Quando a tarefa envolver compra ou venda de criptomoedas ou criptoativos, especialmente a partir de extrato de exchange, trade history, imagem, PDF ou texto descrevendo operações, usar a skill `crypto-investment-json-extractor`.
 - Quando a tarefa envolver proventos, rendimentos passivos, bonificações, split, inplit, staking, lend, earn ou ajuste manual de quantidade de ativos da bolsa brasileira ou criptoativos, usar a skill `asset-events-json-extractor`.
