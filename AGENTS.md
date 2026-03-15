@@ -23,7 +23,18 @@ Cada transação deve seguir este modelo conceitual:
 
 # Roteamento de skills
 
-- Quando a tarefa envolver movimentações financeiras comuns, como pagamentos, recebimentos, transferências, doações, empréstimos ou gastos gerais extraídos de texto, imagem, PDF ou áudio, usar a skill `multimodal-json-extractor`.
+- Quando a tarefa envolver compras do dia a dia feitas com cartão de crédito ou pagamento de fatura de cartão de crédito, com necessidade de informar qual instituição está por trás do cartão e quais instituições servem como garantia do valor, usar a skill `credit-card-purchase-json-extractor`.
+- Na skill `credit-card-purchase-json-extractor`, cada compra no crédito deve gerar exatamente 2 transações:
+  - primeira transação: registrar a despesa normalmente, usando `instituição de garantia -> categoria da despesa`, com o valor integral da compra e `type` igual a `pay`
+  - segunda transação: registrar o compromisso do crédito, usando `categoria da despesa -> garantia=>cartão`, repetindo valor e data da primeira transação e `type` igual a `transfer`
+  - a instituição de garantia pode ser diferente da instituição do cartão
+  - se faltar a instituição do cartão ou a instituição de garantia, interromper o processo ou pedir esclarecimento em vez de inventar
+- Na skill `credit-card-purchase-json-extractor`, cada pagamento de fatura deve gerar 1 transação `transfer` por garantia usada no pagamento:
+  - usar `from` igual a `garantia=>cartão`
+  - usar `to` igual a `cartao credito`
+  - se a fatura for paga com várias garantias, gerar várias transações, uma por garantia
+  - se o valor total da fatura for informado, a soma das transações de pagamento deve bater com esse total
+- Quando a tarefa envolver movimentações financeiras comuns, como pagamentos, recebimentos, transferências, doações, empréstimos ou gastos gerais extraídos de texto, imagem, PDF ou áudio, e não se tratar de evento de cartão de crédito, usar a skill `multimodal-json-extractor`.
 - Quando a tarefa envolver compra ou venda de ativos de investimento na bolsa brasileira, especialmente a partir de nota de corretagem, imagem, PDF ou texto descrevendo operações de renda variável, usar a skill `investment-json-extractor`.
 - Quando a tarefa envolver compra ou venda de criptomoedas ou criptoativos, especialmente a partir de extrato de exchange, trade history, imagem, PDF ou texto descrevendo operações, usar a skill `crypto-investment-json-extractor`.
 - Quando a tarefa envolver proventos, rendimentos passivos, bonificações, split, inplit, staking, lend, earn ou ajuste manual de quantidade de ativos da bolsa brasileira ou criptoativos, usar a skill `asset-events-json-extractor`.
@@ -36,4 +47,5 @@ Cada transação deve seguir este modelo conceitual:
   - eventos que aumentam quantidade usam `qtde__bens -> ATIVO_QTDE`, com `type` igual a `buy`
   - eventos que diminuem quantidade usam `ATIVO_QTDE -> qtde__bens`, com `type` igual a `sell`
   - para criptoativos, quando o ativo aparecer em `from` ou `to`, usar sempre o nome completo em caixa alta, por exemplo `BITCOIN`, `ETHEREUM` e `SOLANA`
+- Se a entrada misturar compras no crédito, pagamento de fatura de cartão e outras movimentações comuns, separar as operações por tipo e aplicar `credit-card-purchase-json-extractor` apenas aos eventos de cartão de crédito e `multimodal-json-extractor` ao restante antes de compor o JSON final.
 - Se a entrada misturar compra ou venda com proventos ou ajustes de quantidade, separar as operações por tipo e aplicar a skill correspondente a cada subconjunto antes de compor o JSON final.
