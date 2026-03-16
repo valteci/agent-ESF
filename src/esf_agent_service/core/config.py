@@ -29,8 +29,8 @@ class Settings(BaseSettings):
     telegram_allowed_user_ids: list[int] = Field(default_factory=list)
     telegram_allowed_chat_ids: list[int] = Field(default_factory=list)
     telegram_download_media: bool = True
-    telegram_ack_enabled: bool = False
-    telegram_ack_template: str = "Mensagem recebida e armazenada com sucesso."
+    telegram_ack_enabled: bool = True
+    telegram_ack_template: str = "recebi sua mensagem"
     telegram_polling_timeout_seconds: int = 30
     telegram_polling_sleep_seconds: float = 1.0
     telegram_clear_webhook_on_polling_start: bool = True

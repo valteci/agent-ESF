@@ -53,6 +53,8 @@ Variáveis principais:
 - `TELEGRAM_ALLOWED_USER_IDS`: lista separada por vírgula para restringir usuários.
 - `TELEGRAM_ALLOWED_CHAT_IDS`: lista separada por vírgula para restringir chats.
 - `TELEGRAM_DOWNLOAD_MEDIA`: baixa anexos recebidos.
+- `TELEGRAM_ACK_ENABLED`: liga a resposta automática do bot. O default atual é `true`.
+- `TELEGRAM_ACK_TEMPLATE`: texto da resposta automática. O default atual é `recebi sua mensagem`.
 - `STORAGE_ROOT`: diretório raiz onde os updates serão persistidos.
 
 ## Execução local com Poetry
