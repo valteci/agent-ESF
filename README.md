@@ -53,8 +53,8 @@ Variáveis principais:
 - `TELEGRAM_ALLOWED_USER_IDS`: lista separada por vírgula para restringir usuários.
 - `TELEGRAM_ALLOWED_CHAT_IDS`: lista separada por vírgula para restringir chats.
 - `TELEGRAM_DOWNLOAD_MEDIA`: baixa anexos recebidos.
-- `TELEGRAM_ACK_ENABLED`: liga a resposta automática do bot. O default atual é `true`.
-- `TELEGRAM_ACK_TEMPLATE`: texto da resposta automática. O default atual é `recebi sua mensagem`.
+- `TELEGRAM_ACK_ENABLED`: liga o feedback temporário do bot via `typing` enquanto o agente processa. O default atual é `true`.
+- `TELEGRAM_ACK_TEMPLATE`: legado do ACK textual antigo; pode ser ignorado no fluxo atual.
 - `AGENT_ENABLED`: liga o disparo do pipeline do agente após a ingestão.
 - `AGENT_EXECUTION_MODE`: `background` para não bloquear o webhook ou `inline` para executar no fluxo da request.
 - `AGENT_COMMAND`: comando executado via subprocesso. O prompt é enviado no `stdin` e o resultado final deve sair em `stdout`.
@@ -137,11 +137,13 @@ data/
 
 O serviço já recebe a mensagem, baixa anexos e persiste tudo de forma consistente. Quando `AGENT_ENABLED=true`, o `MessageProcessor` passa a:
 
+- enviar `typing` para o chat enquanto o agente processa a mensagem
 - montar um `request.json` com texto normalizado, paths dos anexos, `AGENTS.md` e catálogo de skills
 - montar um prompt curto com referências para o agente abrir `AGENTS.md` e apenas as `SKILL.md` relevantes
 - salvar os artefatos de request em `.../agent/request.json` e `.../agent/prompt.txt`
 - executar o comando configurado em `AGENT_COMMAND`
 - salvar o resultado em `.../agent/result.json`, `stdout.txt` e `stderr.txt`
+- enviar o `stdout` final do agente de volta ao Telegram como resposta à mensagem original
 
 O comando recomendado agora é:
 

@@ -53,6 +53,19 @@ class TelegramBotClient:
             payload["reply_to_message_id"] = reply_to_message_id
         return await self._request_json("POST", "/sendMessage", json=payload)
 
+    async def send_chat_action(
+        self,
+        *,
+        chat_id: int,
+        action: str,
+    ) -> bool:
+        result = await self._request_json(
+            "POST",
+            "/sendChatAction",
+            json={"chat_id": chat_id, "action": action},
+        )
+        return bool(result)
+
     async def set_webhook(
         self,
         *,

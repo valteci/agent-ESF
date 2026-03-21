@@ -122,6 +122,56 @@ def test_agent_message_processor_background_mode_does_not_block(tmp_path) -> Non
     asyncio.run(scenario())
 
 
+def test_agent_message_processor_sends_typing_and_final_response(tmp_path) -> None:
+    instructions_path = _write_instructions_and_skill(tmp_path)
+    stored_message = _build_stored_message(tmp_path)
+    runner = _BlockingRunner()
+    dispatcher = BackgroundTaskDispatcher()
+    telegram_client = _FakeTelegramClient()
+    processor = AgentMessageProcessor(
+        prompt_builder=AgentPromptBuilder(instructions_path),
+        runner=runner,
+        results_repository=FilesystemAgentResultsRepository(),
+        execution_mode="background",
+        telegram_client=telegram_client,
+        dispatcher=dispatcher,
+    )
+
+    async def scenario() -> None:
+        await processor.process(stored_message)
+        await runner.started.wait()
+        await asyncio.sleep(0)
+
+        assert telegram_client.actions == [(30, "typing")]
+
+        runner.release.set()
+        await dispatcher.aclose()
+
+        assert telegram_client.messages == [(30, '{"transactions": []}', 20)]
+
+    asyncio.run(scenario())
+
+
+def test_agent_message_processor_chunks_large_telegram_response(tmp_path) -> None:
+    instructions_path = _write_instructions_and_skill(tmp_path)
+    stored_message = _build_stored_message(tmp_path)
+    telegram_client = _FakeTelegramClient()
+    processor = AgentMessageProcessor(
+        prompt_builder=AgentPromptBuilder(instructions_path),
+        runner=_StaticRunner(stdout=("x" * 4500) + "\n" + ("y" * 4500)),
+        results_repository=FilesystemAgentResultsRepository(),
+        execution_mode="inline",
+        telegram_client=telegram_client,
+    )
+
+    asyncio.run(processor.process(stored_message))
+
+    assert len(telegram_client.messages) >= 2
+    assert all(len(text) <= 4000 for _, text, _ in telegram_client.messages)
+    assert telegram_client.messages[0][0] == 30
+    assert telegram_client.messages[0][2] == 20
+
+
 class _StaticRunner:
     def __init__(self, *, stdout: str) -> None:
         self._stdout = stdout
@@ -159,6 +209,26 @@ class _BlockingRunner:
             stdout='{"transactions": []}\n',
             stderr="",
         )
+
+
+class _FakeTelegramClient:
+    def __init__(self) -> None:
+        self.actions: list[tuple[int, str]] = []
+        self.messages: list[tuple[int, str, int | None]] = []
+
+    async def send_chat_action(self, *, chat_id: int, action: str) -> bool:
+        self.actions.append((chat_id, action))
+        return True
+
+    async def send_message(
+        self,
+        *,
+        chat_id: int,
+        text: str,
+        reply_to_message_id: int | None = None,
+    ) -> dict[str, object]:
+        self.messages.append((chat_id, text, reply_to_message_id))
+        return {"ok": True}
 
 
 def _build_stored_message(tmp_path: Path) -> StoredInboundMessage:

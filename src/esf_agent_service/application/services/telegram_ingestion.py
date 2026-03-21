@@ -63,7 +63,6 @@ class TelegramIngestionService:
 
         if not stored_message.duplicate:
             await self._message_processor.process(stored_message)
-            await self._maybe_ack(message)
             return IngestionResult(
                 status="stored",
                 detail="Telegram message stored successfully.",
@@ -114,13 +113,3 @@ class TelegramIngestionService:
                 )
             )
         return downloads
-
-    async def _maybe_ack(self, message: InboundTelegramMessage) -> None:
-        if not self._settings.telegram_ack_enabled:
-            return
-
-        await self._telegram_client.send_message(
-            chat_id=message.chat_id,
-            text=self._settings.telegram_ack_template,
-            reply_to_message_id=message.message_id,
-        )

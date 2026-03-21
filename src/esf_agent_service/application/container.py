@@ -49,7 +49,7 @@ def build_service_container(settings: Settings) -> ServiceContainer:
     inbox_repository = FilesystemInboxRepository(settings.inbox_root)
     update_parser = TelegramUpdateParser()
     task_dispatcher = BackgroundTaskDispatcher()
-    message_processor = _build_message_processor(settings, task_dispatcher)
+    message_processor = _build_message_processor(settings, task_dispatcher, telegram_client)
     ingestion_service = TelegramIngestionService(
         settings=settings,
         telegram_client=telegram_client,
@@ -72,6 +72,7 @@ def build_service_container(settings: Settings) -> ServiceContainer:
 def _build_message_processor(
     settings: Settings,
     task_dispatcher: BackgroundTaskDispatcher,
+    telegram_client: TelegramBotClient,
 ) -> MessageProcessor:
     if not settings.agent_enabled:
         return LoggingMessageProcessor()
@@ -97,5 +98,7 @@ def _build_message_processor(
         runner=runner,
         results_repository=results_repository,
         execution_mode=settings.agent_execution_mode,
+        telegram_client=telegram_client,
+        telegram_feedback_enabled=settings.telegram_ack_enabled,
         dispatcher=task_dispatcher,
     )
