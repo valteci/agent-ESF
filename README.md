@@ -55,6 +55,13 @@ Variáveis principais:
 - `TELEGRAM_DOWNLOAD_MEDIA`: baixa anexos recebidos.
 - `TELEGRAM_ACK_ENABLED`: liga a resposta automática do bot. O default atual é `true`.
 - `TELEGRAM_ACK_TEMPLATE`: texto da resposta automática. O default atual é `recebi sua mensagem`.
+- `AGENT_ENABLED`: liga o disparo do pipeline do agente após a ingestão.
+- `AGENT_EXECUTION_MODE`: `background` para não bloquear o webhook ou `inline` para executar no fluxo da request.
+- `AGENT_COMMAND`: comando executado via subprocesso. O prompt é enviado no `stdin` e o resultado final deve sair em `stdout`.
+- `AGENT_TIMEOUT_SECONDS`: timeout do comando do agente.
+- `AGENT_WORKDIR`: diretório de trabalho do comando do agente.
+- `AGENT_INSTRUCTIONS_PATH`: arquivo `AGENTS.md` do projeto usado como instrução principal.
+- `AGENT_SKILLS_SEARCH_ROOTS`: diretórios, separados por vírgula, usados para descobrir `SKILL.md`.
 - `STORAGE_ROOT`: diretório raiz onde os updates serão persistidos.
 
 ## Execução local com Poetry
@@ -86,6 +93,8 @@ Isso sobe:
 
 - `api`: FastAPI em `http://localhost:8000`
 - `telegram-poller`: consumidor local do bot via polling
+
+Se `AGENT_ENABLED=true`, preencha também `OPENAI_API_KEY`. A imagem instala o `codex` durante o build e o entrypoint autentica o CLI automaticamente com essa chave antes de iniciar o processo principal.
 
 ## Modo webhook
 
@@ -126,4 +135,24 @@ data/
 
 ## Próximo ponto de integração
 
-O serviço já recebe a mensagem, baixa anexos e persiste tudo de forma consistente. O ponto natural para encaixar o seu workflow de negócio é o `LoggingMessageProcessor`, que hoje só registra que a mensagem está pronta para seguir para o pipeline do agente.
+O serviço já recebe a mensagem, baixa anexos e persiste tudo de forma consistente. Quando `AGENT_ENABLED=true`, o `MessageProcessor` passa a:
+
+- montar um `request.json` com texto normalizado, paths dos anexos, `AGENTS.md` e catálogo de skills
+- montar um prompt curto com referências para o agente abrir `AGENTS.md` e apenas as `SKILL.md` relevantes
+- salvar os artefatos de request em `.../agent/request.json` e `.../agent/prompt.txt`
+- executar o comando configurado em `AGENT_COMMAND`
+- salvar o resultado em `.../agent/result.json`, `stdout.txt` e `stderr.txt`
+
+O comando recomendado agora é:
+
+```bash
+AGENT_COMMAND=esf-agent-runner --request {request_path}
+```
+
+Esse launcher usa `codex exec` no root do projeto, entrega o prompt via `stdin`, anexa imagens quando houver e deixa `AGENTS.md` e as skills acessíveis por path. Para funcionar, o ambiente onde o subprocesso roda precisa ter o CLI `codex` instalado e autenticado.
+
+Na execução via Docker, isso já fica embutido na imagem. Basta manter `OPENAI_API_KEY` no `.env` e subir com:
+
+```bash
+docker compose up -d --build
+```

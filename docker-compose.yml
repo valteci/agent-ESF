@@ -17,6 +17,8 @@ services:
       - "8000:8000"
     volumes:
       - ./data:/app/data
+      - ./AGENTS.md:/app/AGENTS.md:ro
+      - ./.agents:/app/.agents:ro
     restart: unless-stopped
 
   telegram-poller:
@@ -29,4 +31,6 @@ services:
       - .env
     volumes:
       - ./data:/app/data
+      - ./AGENTS.md:/app/AGENTS.md:ro
+      - ./.agents:/app/.agents:ro
     restart: unless-stopped

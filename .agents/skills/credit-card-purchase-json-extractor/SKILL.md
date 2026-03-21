@@ -1,6 +1,6 @@
 ---
 name: credit-card-purchase-json-extractor
-description: "Use esta skill quando a tarefa envolver compras do dia a dia feitas com cartao de credito ou pagamento de fatura de cartao de credito, extraidos de texto, imagem, PDF ou audio, e a saida precisar ser um JSON ledger usando buckets de garantia no formato garantia=>cartao."
+description: "Use esta skill quando a tarefa envolver compras do dia a dia feitas com cartao de credito ou pagamento de fatura de cartao de credito, extraidos de texto, imagem, PDF ou audio, e a saida precisar ser um JSON ledger usando buckets de garantia no formato garantia_=>cartao."
 ---
 
 # Objetivo
@@ -61,7 +61,7 @@ Se o usuario informar o valor total da fatura, a soma das garantias usadas no pa
 Definicoes:
 - instituicao do cartao: conta, banco, fintech ou carteira a que o cartao de credito esta vinculado
 - instituicao de garantia: conta, banco, fintech ou carteira de onde o dinheiro sera travado para garantir o pagamento futuro
-- bucket de garantia: notacao especial no formato `<garantia>=><cartao>`
+- bucket de garantia: notacao especial no formato `<garantia>_=><cartao>`
 - bucket de pagamento da fatura: usar exatamente `cartao credito`
 
 A instituicao de garantia pode ser diferente da instituicao do cartao.
@@ -106,17 +106,17 @@ Representa a compra como se o dinheiro saisse da instituicao escolhida como gara
 Representa o compromisso da compra no credito.
 
 - `from`: exatamente o mesmo valor usado no campo `to` da primeira transacao
-- `to`: bucket especial no formato `<instituicao de garantia>=><instituicao do cartao>`
+- `to`: bucket especial no formato `<instituicao de garantia>_=><instituicao do cartao>`
 - `amount`: exatamente o mesmo valor da primeira transacao
 - `type`: `transfer`
 - `timestamp`: exatamente a mesma data da primeira transacao
 - `obs`: descricao resumida do travamento da garantia para pagar o cartao
 
 Regras do bucket especial:
-1. Use exatamente a notacao `<garantia>=><cartao>`.
-2. Nao adicione espacos extras ao redor de `=>`.
+1. Use exatamente a notacao `<garantia>_=><cartao>`.
+2. Nao adicione espacos extras ao redor de `_=>`.
 3. Use as instituicoes ja normalizadas para o JSON final.
-4. Se a garantia e o cartao forem da mesma instituicao, ainda assim gere o bucket, por exemplo `mercado pago=>mercado pago`.
+4. Se a garantia e o cartao forem da mesma instituicao, ainda assim gere o bucket, por exemplo `mercado pago_=>mercado pago`.
 
 # Estrutura de cada pagamento de fatura
 Cada pagamento de fatura deve ser expandido em 1 ou mais transacoes, uma por garantia usada no pagamento.
@@ -124,7 +124,7 @@ Cada pagamento de fatura deve ser expandido em 1 ou mais transacoes, uma por gar
 ## 1) Transacao de pagamento da fatura
 Representa a liberacao do dinheiro travado para quitar parte ou a totalidade da fatura.
 
-- `from`: bucket especial no formato `<instituicao de garantia>=><instituicao do cartao>`
+- `from`: bucket especial no formato `<instituicao de garantia>_=><instituicao do cartao>`
 - `to`: `cartao credito`
 - `amount`: valor pago com aquela garantia
 - `type`: `transfer`
@@ -133,7 +133,7 @@ Representa a liberacao do dinheiro travado para quitar parte ou a totalidade da 
 
 Regras especificas do pagamento:
 1. Gere uma transacao separada para cada garantia usada no pagamento.
-2. Nao troque a direcao: o valor sai de `<garantia>=><cartao>` e vai para `cartao credito`.
+2. Nao troque a direcao: o valor sai de `<garantia>_=><cartao>` e vai para `cartao credito`.
 3. Se o usuario informar o total da fatura e tambem o rateio por garantia, valide se a soma dos valores por garantia bate com o total.
 4. Se a soma nao bater, revise a extracao e nao invente ajuste silencioso.
 5. Se o usuario disser apenas que pagou a fatura, mas nao informar quanto saiu de cada garantia e isso nao puder ser inferido com seguranca, interrompa o processo ou peca esclarecimento.
@@ -147,7 +147,7 @@ Para cada compra no credito identificada:
 3. Identifique a instituicao de garantia.
 4. Gere a primeira transacao como uma despesa normal usando a instituicao de garantia em `from`.
 5. Gere a segunda transacao reutilizando o `to` da primeira transacao em `from`.
-6. Monte o `to` da segunda transacao no formato `<garantia>=><cartao>`.
+6. Monte o `to` da segunda transacao no formato `<garantia>_=><cartao>`.
 7. Repita o mesmo `amount` e `timestamp` nas duas transacoes.
 8. Use `type` igual a `pay` na primeira transacao e `transfer` na segunda.
 
@@ -159,7 +159,7 @@ Para cada pagamento de fatura identificado:
 3. Identifique cada instituicao de garantia usada no pagamento.
 4. Identifique o valor pago por cada garantia.
 5. Para cada garantia identificada, gere 1 transacao com:
-   - `from`: `<garantia>=><cartao>`
+   - `from`: `<garantia>_=><cartao>`
    - `to`: `cartao credito`
    - `amount`: valor pago por aquela garantia
    - `type`: `transfer`
@@ -184,7 +184,7 @@ Se o usuario comprou um salgado com o cartao do nubank e quer usar o mercado pag
     },
     {
       "from": "comida",
-      "to": "mercado pago=>nubank",
+      "to": "mercado pago_=>nubank",
       "amount": "10.00",
       "type": "transfer",
       "timestamp": "14-03-2026",
@@ -210,7 +210,7 @@ Se o usuario comprou uma roupa de 200.00 com o cartao do itau e quer usar o nuba
     },
     {
       "from": "compras",
-      "to": "nubank=>itau",
+      "to": "nubank_=>itau",
       "amount": "200.00",
       "type": "transfer",
       "timestamp": "14-03-2026",
@@ -236,7 +236,7 @@ Se o usuario usou o cartao do mercado pago e a garantia tambem vem do mercado pa
     },
     {
       "from": "compras",
-      "to": "mercado pago=>mercado pago",
+      "to": "mercado pago_=>mercado pago",
       "amount": "50.00",
       "type": "transfer",
       "timestamp": "14-03-2026",
@@ -253,7 +253,7 @@ Se o usuario pagou 300.00 da fatura do cartao do nubank usando apenas a garantia
 {
   "transactions": [
     {
-      "from": "mercado pago=>nubank",
+      "from": "mercado pago_=>nubank",
       "to": "cartao credito",
       "amount": "300.00",
       "type": "transfer",
@@ -271,7 +271,7 @@ Se o usuario pagou 1000.00 da fatura do cartao do nubank usando 400.00 do mercad
 {
   "transactions": [
     {
-      "from": "mercado pago=>nubank",
+      "from": "mercado pago_=>nubank",
       "to": "cartao credito",
       "amount": "400.00",
       "type": "transfer",
@@ -279,7 +279,7 @@ Se o usuario pagou 1000.00 da fatura do cartao do nubank usando 400.00 do mercad
       "obs": "Pagamento parcial da fatura do cartao nubank usando garantia do mercado pago"
     },
     {
-      "from": "99pay=>nubank",
+      "from": "99pay_=>nubank",
       "to": "cartao credito",
       "amount": "600.00",
       "type": "transfer",
